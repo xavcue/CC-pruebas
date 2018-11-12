@@ -8,18 +8,10 @@
 #  https://stackoverflow.com/questions/26079754/flask-how-to-return-a-success-status-code-for-ajax-call
 # https://blog.nearsoftjobs.com/crear-un-api-y-una-aplicación-web-con-flask-6a76b8bf5383
 
-#
-#
-
-
 # Bibliotecas a importar
 from flask import Flask     # para usar el microframework Flask
 from flask import jsonify
 from flask import request
-
-from listas import *
-
-import json                 # para usar la estructura JSON
 
 app = Flask(__name__)
 
