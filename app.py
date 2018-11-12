@@ -18,7 +18,7 @@ app = Flask(__name__)
 class Twitter:
 
     # Check that it has been deployed correctly
-    @app.route('/', methods=['GET'])
+    @app.route('/')
     def index():
         return jsonify(status='OK')
 
