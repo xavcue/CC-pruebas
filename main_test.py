@@ -39,7 +39,7 @@ class TestTwitterData(unittest.TestCase):
     # Testear que se visualizan todos los elementos
     def test_get_all_data(self):
         #result = requests.get('http://localhost:5000/data_twitter')
-        result = app.get("/data_twitter")
+        result = self.app.get("/data_twitter")
         self.assertEqual(result.status_code, 200)
         self.assertTrue(get_data_twitter(), "The list is empty")
         pass
@@ -47,7 +47,7 @@ class TestTwitterData(unittest.TestCase):
     # Testear que se visualiza uno de los elementos
     def test_get_data(self):
         #result = requests.get('http://127.0.0.1:5000/get_data?id=GR')
-        result = app.get("/get_data?id=GR")
+        result = self.app.get("/get_data?id=GR")
         self.assertEqual(result.status_code, 200)
         self.assertIsInstance(get_id_data_twitter("VLC"), list, "It's not a list")
         pass
@@ -55,7 +55,7 @@ class TestTwitterData(unittest.TestCase):
     # Testear que se modifica el usuario de uno de los elementos
     def test_put_data(self):
         #result = requests.put('http://127.0.0.1:5000/put_data?name=name&user=SEVILLA&id=GR')
-        result = app.put("/put_data?name=name&user=SEVILLA&id=GR")
+        result = self.app.put("/put_data?name=name&user=SEVILLA&id=GR")
         #result = requests.post('http://127.0.0.1:5000/data_twitter_update?name=name&user=hola&id=GR')
         self.assertEqual(result.status_code, 200)
         #add_data_twitter("Canarias")
@@ -71,7 +71,7 @@ class TestTwitterData(unittest.TestCase):
                      "user_twitter":"@y"
                     }]}
         # result = requests.post('http://localhost:5000/post_data', data=new_data)
-        result = app.put("/post_data")
+        result = self.app.put("/post_data")
         self.assertEqual(result.status_code, 200)
         add_data_twitter(new_data)
         self.assertTrue(get_data_twitter(), "No se ha añadido la lista")
