@@ -27,7 +27,7 @@ class TestTwitterData(unittest.TestCase):
     # Testear que se ha desplegado correctamente
     def test_index(self):
         #result = requests.get('http://127.0.0.1:5000/')
-        result = requests.get("/")
+        result = self.app.get("/")
         self.assertEqual(result.status_code, 200)
         pass
 # ---------------------------------------------------------------------------- #
