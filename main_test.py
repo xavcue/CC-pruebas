@@ -12,7 +12,8 @@ import unittest     # https://docs.python.org/3/library/unittest.html
 # https://www.blog.pythonlibrary.org/2016/07/07/python-3-testing-an-intro-to-unittest/
 import requests     # https://www.pythonforbeginners.com/requests/using-requests-in-python
 
-from main import *
+#from main import *
+import main
 from util import *
 
 class TestTwitterData(unittest.TestCase):
@@ -24,7 +25,7 @@ class TestTwitterData(unittest.TestCase):
     def setUp(self):
         # self.twitter_data = TwitterData()
         # Creamos el cliente que se va a utilizar.
-        self.app = TwitterData.app.test_client()
+        self.app = main.app.test_client()
 # ---------------------------------------------------------------------------- #
     # Testear que se ha desplegado correctamente
     def test_index(self):
