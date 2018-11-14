@@ -22,7 +22,9 @@ class TestTwitterData(unittest.TestCase):
     # el framework considerará que la prueba ha sufrido un error y el método
     # de prueba no se ejecutará.
     def setUp(self):
-        self.twitter_data = TwitterData()
+        # self.twitter_data = TwitterData()
+        # Creamos el cliente que se va a utilizar.
+        self.app = main.app.test_client()
 # ---------------------------------------------------------------------------- #
     # Testear que se ha desplegado correctamente
     def test_index(self):
