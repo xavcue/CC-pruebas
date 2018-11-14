@@ -81,6 +81,7 @@ class TestTwitterData(unittest.TestCase):
     def test_delete_data(self):
         # result = requests.delete('http://127.0.0.1:5000/delete_data?id=GR')
         result = self.app.put("/delete_data?id=GR")
+        
         self.assertEqual(result.status_code, 200)
         remove_data_twitter("GR")
         #self.assertTrue("GR" not in get_data_twitter(), "No se ha eliminado la lista")
