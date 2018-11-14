@@ -24,7 +24,7 @@ class TestTwitterData(unittest.TestCase):
     def setUp(self):
         # self.twitter_data = TwitterData()
         # Creamos el cliente que se va a utilizar.
-        self.app = main.app.test_client()
+        self.app = TwitterData.app.test_client()
 # ---------------------------------------------------------------------------- #
     # Testear que se ha desplegado correctamente
     def test_index(self):
