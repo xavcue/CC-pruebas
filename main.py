@@ -14,6 +14,9 @@ from flask import request   # https://github.com/requests/requests
 
 from util import *          # importar el fichero util.py
 
+
+import os
+
 # Creación de una instancia de la clase Flask
 app = Flask(__name__)
 
@@ -198,7 +201,6 @@ class TwitterData:
 # ---------------------------------------------------------------------------- #
 
 if __name__ == '__main__':
-    #port = int(os.environ.get("PORT", 5000))
-    #app.run(host="0.0.0.0", port=port,debug=True)
-    app.run(debug=True, port = 5000)
-
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port,debug=True)
+    #app.run(debug=True, port = 5000)
