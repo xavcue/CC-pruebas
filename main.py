@@ -6,17 +6,22 @@
 Fichero que implementa la clase API REST haciendo uso del microframework Flask
 '''
 
-
 # Bibliotecas a usar
 import json
+import logging
 from flask import Flask     # importamos la clase Flask
 from flask import jsonify   # https://pypi.org/project/Flask-Jsonpify/
 from flask import request   # https://github.com/requests/requests
 
 from data import *
 
+# Para la creación del log
+from logger import logger      # https://ricveal.com/blog/curso-python-5/
+log = logger()
+
 # Creación de una instancia de la clase Flask
 app = Flask(__name__)
+log.info("Successfully executed application.")
 
 # ---------------------------------------------------------------------------- #
 
@@ -24,7 +29,9 @@ app = Flask(__name__)
 try:
     with open('data/data.json', encoding='utf-8') as data_file:
         data_twitter = json.loads(data_file.read())
+        log.info("Successfully read file JSON.")
 except IOError as fail:
+    log.error("Unsuccessfully read file JSON.")
     print("Error %d reading %s", fail.errno, fail.strerror)
 
 # ---------------------------------------------------------------------------- #
@@ -32,7 +39,12 @@ except IOError as fail:
 # Ruta para comprobar que se ha desplegado de forma correcta
 # curl http://127.0.0.1:5000
 @app.route('/')
+@app.route('/status')
 def index():
+
+    # Añadimos mensaje para el log
+    log.info("Successfully status application.")
+
     return jsonify(status='OK') # devolvemos { "status": "OK" }
 
 # ---------------------------------------------------------------------------- #
@@ -55,6 +67,9 @@ def not_found(error):
     # http://docs.python-requests.org/en/master/user/quickstart/
     result.status_code = 404
 
+    # Añadimos mensaje para el log
+    log.error("404 Not Found: The requested URL was not found on the server.")
+
     return result # devolvemos { "msg error": "URL not found" }
 
 # ---------------------------------------------------------------------------- #
@@ -75,6 +90,9 @@ def not_found(error):
     # 404: Recurso no encontrado, el servidor web no encuentra la página
     # http://docs.python-requests.org/en/master/user/quickstart/
     result.status_code = 405
+
+    # Añadimos mensaje para el log
+    log.error("405 Method not allowed.")
 
     return result # devolvemos { "msg error": "Method not allowed" }
 
@@ -99,6 +117,9 @@ def get_all_data():
     # 200: Respuesta estándar para peticiones correctas
     result.status_code = 200
 
+    # Añadimos mensaje para el log
+    log.info("Successfully method GET: The URL shows all the elements.")
+
     return result
 
 # ---------------------------------------------------------------------------- #
@@ -121,6 +142,9 @@ def get_data(nameID):
     # Se modifica el código de estado de la respuesta a 200
     # 200: Respuesta estándar para peticiones correctas
     result.status_code = 200
+
+    # Añadimos mensaje para el log
+    log.info("Successfully method GET: The URL shows only one item.")
 
     return result
 
@@ -156,6 +180,9 @@ def put_data():
     # 200: Respuesta estándar para peticiones correctas
     result.status_code = 200
 
+    # Añadimos mensaje para el log
+    log.info("Successfully method PUT: The URL shows the creation of the new item.")
+
     return result
 
 # ---------------------------------------------------------------------------- #
@@ -186,6 +213,9 @@ def post_data(nameID):
     # Se modifica el código de estado de la respuesta a 200
     # 200: Respuesta estándar para peticiones correctas
     result.status_code = 200
+
+    # Añadimos mensaje para el log
+    log.info("Successfully method POST: The URL shows the modification of the item.")
 
     return result
 
@@ -229,6 +259,9 @@ def delete_data(nameID):
     # Se modifica el código de estado de la respuesta a 200
     # 200: Respuesta estándar para peticiones correctas
     result.status_code = 200
+
+    # Añadimos mensaje para el log
+    log.warning("Successfully method DELETE: The URL shows the deletion of an item.")
 
     return result
 
