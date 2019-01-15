@@ -8,20 +8,95 @@ Fichero que implementa la clase API REST haciendo uso del microframework Flask
 
 # Bibliotecas a usar
 import json
-import logging
-from flask import Flask     # importamos la clase Flask
+import pymysql
+
+from flask import Flask    # importamos la clase Flask
 from flask import jsonify   # https://pypi.org/project/Flask-Jsonpify/
 from flask import request   # https://github.com/requests/requests
+
+from flask import render_template, request, redirect, url_for, flash
+from flask_mysqldb import MySQL
 
 from data import *
 
 # Para la creación del log
-from logger import logger      # https://ricveal.com/blog/curso-python-5/
-log = logger()
+#from log import logger      # https://ricveal.com/blog/curso-python-5/
+#log = logger("app")
+import logging
+logger = logging.getLogger("app")
+logging.basicConfig(filename= "holi.log", filemode='a', format= '%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 # Creación de una instancia de la clase Flask
 app = Flask(__name__)
-log.info("Successfully executed application.")
+
+#log.info("Successfully run Flask application.")
+
+# Mysql Connection
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'flaskcrud'
+mysql = MySQL(app)
+
+
+# routes
+@app.route('/BD')
+def Index():
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM twitter')
+    data = cur.fetchall()
+    cur.close()
+    return render_template('index.html', contacts = data, content_type='application/json')
+
+@app.route('/BDadd_data', methods=['POST'])
+def add_contact():
+    if request.method == 'POST':
+        name = request.form['name']
+        url = request.form['url']
+        query = request.form['query']
+        tweet_volume = request.form['tweet_volume']
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO twitter (name, url, query, tweet_volume) VALUES (%s,%s,%s, %s)", (name, url, query, tweet_volume))
+        mysql.connection.commit()
+        flash('Contact Added successfully')
+        return redirect(url_for('Index'))
+
+@app.route('/BDedit/<id>', methods = ['POST', 'GET'])
+def get_contact(id):
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM twitter WHERE id = %s', (id))
+    data = cur.fetchall()
+    cur.close()
+    print(data[0])
+    return render_template('edit-contact.html', contact = data[0])
+
+@app.route('/BDupdate/<id>', methods=['POST'])
+def update_contact(id):
+    if request.method == 'POST':
+        name = request.form['name']
+        url = request.form['url']
+        query = request.form['query']
+        tweet_volume = request.form['tweet_volume']
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            UPDATE twitter
+            SET name = %s,
+            url = %s,
+            query = %s,
+            tweet_volume = %s
+            WHERE id = %s
+            """, (fullname, email, phone, id))
+        flash('Contact Updated Successfully')
+        mysql.connection.commit()
+        return redirect(url_for('Index'))
+
+@app.route('/BDdelete/<string:id>', methods = ['POST','GET'])
+def delete_contact(id):
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM twitter WHERE id = {0}'.format(id))
+    mysql.connection.commit()
+    flash('Contact Removed Successfully')
+    return redirect(url_for('Index'))
 
 # ---------------------------------------------------------------------------- #
 
@@ -29,9 +104,9 @@ log.info("Successfully executed application.")
 try:
     with open('data/data.json', encoding='utf-8') as data_file:
         data_twitter = json.loads(data_file.read())
-        log.info("Successfully read file JSON.")
+        #log.info("Successfully read file JSON.")
 except IOError as fail:
-    log.error("Unsuccessfully read file JSON.")
+    #log.error("Unsuccessfully read file JSON.")
     print("Error %d reading %s", fail.errno, fail.strerror)
 
 # ---------------------------------------------------------------------------- #
@@ -43,7 +118,7 @@ except IOError as fail:
 def index():
 
     # Añadimos mensaje para el log
-    log.info("Successfully status application.")
+    logger.info("Successfully status application in '/' or /status")
 
     return jsonify(status='OK') # devolvemos { "status": "OK" }
 
@@ -68,7 +143,7 @@ def not_found(error):
     result.status_code = 404
 
     # Añadimos mensaje para el log
-    log.error("404 Not Found: The requested URL was not found on the server.")
+    #log.error("404 Not Found: The requested URL was not found on the server.")
 
     return result # devolvemos { "msg error": "URL not found" }
 
@@ -92,7 +167,7 @@ def not_found(error):
     result.status_code = 405
 
     # Añadimos mensaje para el log
-    log.error("405 Method not allowed.")
+    #log.error("405 Method not allowed.")
 
     return result # devolvemos { "msg error": "Method not allowed" }
 
@@ -118,7 +193,7 @@ def get_all_data():
     result.status_code = 200
 
     # Añadimos mensaje para el log
-    log.info("Successfully method GET: The URL shows all the elements.")
+    #log.info("Successfully method GET: The URL shows all the elements in '/data_twitter'")
 
     return result
 
@@ -144,7 +219,7 @@ def get_data(nameID):
     result.status_code = 200
 
     # Añadimos mensaje para el log
-    log.info("Successfully method GET: The URL shows only one item.")
+    #log.info("Successfully method GET: The URL shows only one item in '/data_twitter/%s'", nameID)
 
     return result
 
@@ -181,7 +256,7 @@ def put_data():
     result.status_code = 200
 
     # Añadimos mensaje para el log
-    log.info("Successfully method PUT: The URL shows the creation of the new item.")
+    #log.info("Successfully method PUT: The URL shows the creation of the new item in '/data_twitter'")
 
     return result
 
@@ -215,7 +290,7 @@ def post_data(nameID):
     result.status_code = 200
 
     # Añadimos mensaje para el log
-    log.info("Successfully method POST: The URL shows the modification of the item.")
+    #log.info("Successfully method POST: The URL shows the modification of the item in '/data_twitter/<nameID>'")
 
     return result
 
@@ -261,7 +336,7 @@ def delete_data(nameID):
     result.status_code = 200
 
     # Añadimos mensaje para el log
-    log.warning("Successfully method DELETE: The URL shows the deletion of an item.")
+    #log.warning("Successfully method DELETE: The URL shows the deletion of an item in '/data_twitter/<nameID>'")
 
     return result
 
@@ -270,4 +345,4 @@ def delete_data(nameID):
 if __name__ == '__main__':
     #port = int(os.environ.get("PORT", 5000))
     #app.run(host="0.0.0.0", port=port,debug=True)
-    app.run(debug=True, port = 5000)
+    app.run(debug=True, port = 9002)
