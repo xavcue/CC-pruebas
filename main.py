@@ -18,6 +18,8 @@ from flask_mysqldb import MySQL
 
 from data import *
 
+from pymongo import *
+
 # Para la creación del log
 #from log import logger      # https://ricveal.com/blog/curso-python-5/
 #log = logger("app")
@@ -28,8 +30,13 @@ logging.basicConfig(filename= "holi.log", filemode='a', format= '%(asctime)s - %
 # Creación de una instancia de la clase Flask
 app = Flask(__name__)
 
-#log.info("Successfully run Flask application.")
+client = MongoClient("mongodb://127.0.0.1:27017") #host uri
+db = client.mymongodb #Select the database
+todos = db.todo #Select the collection name
 
+
+#log.info("Successfully run Flask application.")
+'''
 # Mysql Connection
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -61,7 +68,7 @@ def add_contact():
         flash('Contact Added successfully')
         return redirect(url_for('Index'))
 
-'''
+
 @app.route('/delete/<string:fullname>', methods = ['POST','GET'])
 def delete_contact(fullname):
     cur = mysql.connection.cursor()
@@ -317,4 +324,4 @@ def delete_data(nameID):
 if __name__ == '__main__':
     #port = int(os.environ.get("PORT", 5000))
     #app.run(host="0.0.0.0", port=port,debug=True)
-    app.run(debug=True, port = 9001)
+    app.run(debug=True, port = 9002)
