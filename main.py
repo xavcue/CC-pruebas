@@ -8,7 +8,6 @@ Fichero que implementa la clase API REST haciendo uso del microframework Flask
 
 # Bibliotecas a usar
 import json
-import pymysql
 
 from flask import Flask    # importamos la clase Flask
 from flask import jsonify   # https://pypi.org/project/Flask-Jsonpify/
@@ -35,69 +34,42 @@ app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'flaskcrud'
+app.config['MYSQL_DB'] = 'twitter'
 mysql = MySQL(app)
 
+# settings
+app.secret_key = "mysecretkey"
 
 # routes
 @app.route('/BD')
 def Index():
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM twitter')
+    cur.execute('SELECT * FROM contacts')
     data = cur.fetchall()
     cur.close()
     return render_template('index.html', contacts = data, content_type='application/json')
 
-@app.route('/BDadd_data', methods=['POST'])
+@app.route('/add_contact', methods=['POST'])
 def add_contact():
     if request.method == 'POST':
         name = request.form['name']
         url = request.form['url']
-        query = request.form['query']
         tweet_volume = request.form['tweet_volume']
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO twitter (name, url, query, tweet_volume) VALUES (%s,%s,%s, %s)", (name, url, query, tweet_volume))
+        cur.execute("INSERT INTO contacts (name, url, tweet_volume) VALUES ( %s,%s,%s)", (name, url, tweet_volume))
         mysql.connection.commit()
         flash('Contact Added successfully')
         return redirect(url_for('Index'))
 
-@app.route('/BDedit/<id>', methods = ['POST', 'GET'])
-def get_contact(id):
+'''
+@app.route('/delete/<string:fullname>', methods = ['POST','GET'])
+def delete_contact(fullname):
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM twitter WHERE id = %s', (id))
-    data = cur.fetchall()
-    cur.close()
-    print(data[0])
-    return render_template('edit-contact.html', contact = data[0])
-
-@app.route('/BDupdate/<id>', methods=['POST'])
-def update_contact(id):
-    if request.method == 'POST':
-        name = request.form['name']
-        url = request.form['url']
-        query = request.form['query']
-        tweet_volume = request.form['tweet_volume']
-        cur = mysql.connection.cursor()
-        cur.execute("""
-            UPDATE twitter
-            SET name = %s,
-            url = %s,
-            query = %s,
-            tweet_volume = %s
-            WHERE id = %s
-            """, (fullname, email, phone, id))
-        flash('Contact Updated Successfully')
-        mysql.connection.commit()
-        return redirect(url_for('Index'))
-
-@app.route('/BDdelete/<string:id>', methods = ['POST','GET'])
-def delete_contact(id):
-    cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM twitter WHERE id = {0}'.format(id))
+    cur.execute('DELETE FROM contacts WHERE fullname = {0}'.format(fullname))
     mysql.connection.commit()
     flash('Contact Removed Successfully')
     return redirect(url_for('Index'))
-
+'''
 # ---------------------------------------------------------------------------- #
 
 # Obtenemos los datos
@@ -345,4 +317,4 @@ def delete_data(nameID):
 if __name__ == '__main__':
     #port = int(os.environ.get("PORT", 5000))
     #app.run(host="0.0.0.0", port=port,debug=True)
-    app.run(debug=True, port = 9002)
+    app.run(debug=True, port = 9001)
