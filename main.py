@@ -18,7 +18,6 @@ from flask_mysqldb import MySQL
 
 from data import *
 
-from pymongo import *
 
 # Para la creación del log
 #from log import logger      # https://ricveal.com/blog/curso-python-5/
