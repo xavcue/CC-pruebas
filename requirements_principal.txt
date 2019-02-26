@@ -3,3 +3,4 @@ requests==2.20.1
 gunicorn==19.9.0
 PyMySQL==0.9.3
 flask_mysqldb==0.2.0
+pymongo==2.8.1
