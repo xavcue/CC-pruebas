@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-      name='Flask-CI-Example',
+      name='CC-pruebas',
       packages=find_packages(),
       version='0.1',
       long_description=__doc__,
@@ -18,10 +18,3 @@ setup(
                         ],
       tests_require=['nose'],
       )
-
-
-
-
-
-
-
