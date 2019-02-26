@@ -22,20 +22,21 @@ from data import *
 # Para la creación del log
 #from log import logger      # https://ricveal.com/blog/curso-python-5/
 #log = logger("app")
-import logging
-logger = logging.getLogger("app")
-logging.basicConfig(filename= "holi.log", filemode='a', format= '%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+#import logging
+#logger = logging.getLogger("app")
+#logging.basicConfig(filename= "holi.log", filemode='a', format= '%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 # Creación de una instancia de la clase Flask
 app = Flask(__name__)
 
+'''
 client = MongoClient("mongodb://127.0.0.1:27017") #host uri
 db = client.mymongodb #Select the database
 todos = db.todo #Select the collection name
 
-
-#log.info("Successfully run Flask application.")
 '''
+#log.info("Successfully run Flask application.")
+
 # Mysql Connection
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -67,7 +68,7 @@ def add_contact():
         flash('Contact Added successfully')
         return redirect(url_for('Index'))
 
-
+'''
 @app.route('/delete/<string:fullname>', methods = ['POST','GET'])
 def delete_contact(fullname):
     cur = mysql.connection.cursor()
@@ -96,7 +97,7 @@ except IOError as fail:
 def index():
 
     # Añadimos mensaje para el log
-    logger.info("Successfully status application in '/' or /status")
+    #logger.info("Successfully status application in '/' or /status")
 
     return jsonify(status='OK') # devolvemos { "status": "OK" }
 
@@ -323,4 +324,4 @@ def delete_data(nameID):
 if __name__ == '__main__':
     #port = int(os.environ.get("PORT", 5000))
     #app.run(host="0.0.0.0", port=port,debug=True)
-    app.run(debug=True, port = 9002)
+    app.run(debug=True, port = 5000)
