@@ -1,5 +1,7 @@
 # Proyecto Cloud Computing 2018-2019
 
+[![Coverage Status](https://coveralls.io/repos/github/Gecofer/CC-pruebas/badge.svg?branch=master)](https://coveralls.io/github/Gecofer/CC-pruebas?branch=master)
+
 #### Autora: Gema Correa Fernández
 #### Máster en Ingeniría Informática
 #### Enlace de la documentación: https://gecofer.github.io/proyecto-CC/
