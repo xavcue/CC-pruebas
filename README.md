@@ -1,7 +1,6 @@
 # Proyecto Cloud Computing 2018-2019
 
 [![Build Status](https://travis-ci.org/Gecofer/CC-pruebas?branch=master)](https://travis-ci.org/Gecofer/CC-pruebas)
-
 [![Coverage Status](https://coveralls.io/repos/github/Gecofer/CC-pruebas/badge.svg?branch=master)](https://coveralls.io/github/Gecofer/CC-pruebas?branch=master)
 
 
